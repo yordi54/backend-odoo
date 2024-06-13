@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class AttendanceService {
     constructor(private readonly httpService: HttpService) { }
-    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc';
+    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc/';
 
     async getAttendancesOdoo(id: number, password: string, register_attendance_id: number) {
         const data = {

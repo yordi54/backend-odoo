@@ -9,7 +9,7 @@ import { parse } from 'path/posix';
 @Injectable()
 export class RegisterAttendanceService {
     constructor(private readonly httpService: HttpService) { }
-    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc';
+    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc/';
 
     async createRegisterAttendance(id: number, password: String, grade_id: number) {
         const current_date = new Date();
@@ -73,6 +73,7 @@ export class RegisterAttendanceService {
         };
 
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        console.log(response.data);
         return response.data;
     }
 
@@ -115,7 +116,7 @@ export class RegisterAttendanceService {
     async getAttendanceByGrade(id: number, password: string, grade_id: number) {
         try {
             const response = await this.getAttendanceByGradeOdoo(id, password, grade_id);
-            //console.log(response);
+            console.log(response);
             const registerId = response['result'][0]['id'];
             const attendances = await this.getAttendancesOdoo(id, password, registerId);
             const student_ids = attendances['result'].map((attendance) => attendance['student_id'][0]);

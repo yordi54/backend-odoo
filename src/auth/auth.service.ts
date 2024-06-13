@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 export class AuthService {
     constructor(private readonly httpService: HttpService) {}
 
-    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc';
+    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc/';
 
     hola(): string {
         return 'Hola mundo!';

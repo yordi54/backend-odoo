@@ -1,8 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { AxiosResponse } from 'axios';
-import { Observable, catchError, firstValueFrom, map, throwError } from 'rxjs';
+
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -41,31 +40,23 @@ export class AuthService {
         }
     }
 
-    async getEmployeeOdoo(id: number, password: string){
+    
+
+    async getUserOdoo(id: number, password: string){
         const data = {
             "jsonrpc": "2.0",
             "method": "call",
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "hr.employee", "search_read", [["user_id", "=",id ]],["resource_id", "company_id", "department_id", "job_id", "work_email", "user_id"]]
+                "args": ["prueba", id, password, "res.users", "read", [id],["employee_ids","company_ids","complete_name", "image_1920"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
         return response.data;
     }
 
-    async getEmployee(id: number, password: string){
-        try{
-            const response = await this.getEmployeeOdoo(id, password);
-            console.log(response);
-            return response;
-
-        }catch(error){
-            throw new BadRequestException(error);
-        }
-        
-    }
+    
 
     async getSchedulesOdoo(id: number, password: string, teacher_id: number){
         const data = {
@@ -91,6 +82,18 @@ export class AuthService {
             throw new BadRequestException(error);
         }
         
+    }
+
+
+    async getUser(id: number, password: string){
+        try{
+            const response = await this.getUserOdoo(id, password);
+            console.log(response);
+            return response;
+
+        }catch(error){
+            throw new BadRequestException(error);
+        }
     }
         
 

@@ -14,13 +14,14 @@ export class AuthController {
     async login(@Body('email') email: string, @Body('password') password: string){
         return this.authService.login(email, password);
     }
-    @Post('employee')
-    async getEmployee(@Body('id') id: number, @Body('password') password: string){
-        return this.authService.getEmployee(id, password);
-    }
 
     @Post('schedules')
     async getSchedules(@Body('id') id: number, @Body('password') password: string, @Body('employee_id') employee_id: number ){
         return this.authService.getSchedules(id, password, employee_id);
+    }
+
+    @Post('user')
+    async getUser(@Body('id') id: number, @Body('password') password: string){
+        return this.authService.getUser(id, password);
     }
 }

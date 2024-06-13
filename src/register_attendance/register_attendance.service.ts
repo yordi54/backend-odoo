@@ -21,7 +21,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "register.attendance", "create", {
+                "args": ["colegio_mariscal", id, password, "register.attendance", "create", {
                     "date": formattedDate,
                     "name": nameWithDate,
                     "grade_id": grade_id
@@ -68,7 +68,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "register.attendance", "search_read", [["grade_id", "=", grade_id]], []]
+                "args": ["colegio_mariscal", id, password, "register.attendance", "search_read", [["grade_id", "=", grade_id]], []]
             }
         };
 
@@ -85,7 +85,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
+                "args": ["colegio_mariscal", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -103,7 +103,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_id]], ["photo", "full_name"]]
+                "args": ["colegio_mariscal", id, password, "student", "search_read", [["id", "in", student_id]], ["photo", "full_name"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -146,7 +146,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "attendance", "write", [attendance_id], {
+                "args": ["colegio_mariscal", id, password, "attendance", "write", [attendance_id], {
                     "attended": attended,
                     "leave": leave,
                     "missing": missing
@@ -177,7 +177,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "register.attendance", "search_read", [["id", "=", register_attendance_id]], []]
+                "args": ["colegio_mariscal", id, password, "register.attendance", "search_read", [["id", "=", register_attendance_id]], []]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -191,7 +191,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "attendance", "search_read", [["id", "in", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
+                "args": ["colegio_mariscal", id, password, "attendance", "search_read", [["id", "in", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
             }
         };
 

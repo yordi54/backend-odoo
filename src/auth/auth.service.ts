@@ -20,7 +20,7 @@ export class AuthService {
             "params": {
                 "service": "common",
                 "method": "login",
-                "args": ["prueba", email, password]
+                "args": ["colegio_mariscal", email, password]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -49,7 +49,7 @@ export class AuthService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "res.users", "read", [id],["employee_ids","company_ids","complete_name", "image_1920"]]
+                "args": ["colegio_mariscal", id, password, "res.users", "read", [id],["employee_ids","company_ids","complete_name", "image_1920"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -65,7 +65,7 @@ export class AuthService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "schedule", "search_read", [["teacher_id", "=",teacher_id ]],[]]
+                "args": ["colegio_mariscal", id, password, "schedule", "search_read", [["teacher_id", "=",teacher_id ]],[]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));

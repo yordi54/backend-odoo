@@ -14,7 +14,7 @@ export class AttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing","student_id"]]
+                "args": ["colegio_mariscal", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing","student_id"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -28,7 +28,7 @@ export class AttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_id]], ["photo"]]
+                "args": ["colegio_mariscal", id, password, "student", "search_read", [["id", "in", student_id]], ["photo"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));

@@ -15,7 +15,7 @@ export class GuardianService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "announcement", "search_read", [], []]
+                "args": ["colegio_mariscal", id, password, "announcement", "search_read", [], []]
             }
         }
         //comunicados
@@ -33,7 +33,7 @@ export class GuardianService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "grade", "search_read", [], ['name', 'enrollment_ids', 'cycle_id']]
+                "args": ["colegio_mariscal", id, password, "grade", "search_read", [], ['name', 'enrollment_ids', 'cycle_id']]
             }
         }
         //comunicados
@@ -58,7 +58,7 @@ export class GuardianService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "enrollment", "search_read", [["id", "in", enrollmentIds]], []]
+                "args": ["colegio_mariscal", id, password, "enrollment", "search_read", [["id", "in", enrollmentIds]], []]
             }
         }
         //comunicados
@@ -75,7 +75,7 @@ export class GuardianService {
                 "params": {
                     "service": "object",
                     "method": "execute",
-                    "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_ids]], []]
+                    "args": ["colegio_mariscal", id, password, "student", "search_read", [["id", "in", student_ids]], []]
                 }
             }
             //comunicados

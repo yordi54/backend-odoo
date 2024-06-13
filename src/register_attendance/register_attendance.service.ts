@@ -9,7 +9,7 @@ import { parse } from 'path/posix';
 @Injectable()
 export class RegisterAttendanceService {
     constructor(private readonly httpService: HttpService) { }
-    private baseUrl = 'http://localhost:8069/jsonrpc';
+    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc';
 
     async createRegisterAttendance(id: number, password: String, grade_id: number) {
         const current_date = new Date();

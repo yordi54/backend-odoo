@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class EmployeeService {
     constructor(private readonly httpService: HttpService) { }
-    private baseUrl = 'http://localhost:8069/jsonrpc';
+    private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc';
 
     async getEmployeeOdoo(id: number, password: string) {
         const data = {

@@ -46,7 +46,7 @@ export class AuthService {
             }
             
             return {
-                "result": "Credenciales invalidas"
+                "result": []
             }
        
             

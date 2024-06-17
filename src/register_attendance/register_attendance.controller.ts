@@ -6,8 +6,8 @@ export class RegisterAttendanceController {
   constructor(private readonly registerAttendanceService: RegisterAttendanceService) {}
 
   @Post('get-grades')
-    async getGrades(@Body('id') id: number, @Body('password') password: string, @Body('teacher_id') teacher_id: number, @Body('day') day: string){
-        return this.registerAttendanceService.getGradeOdoo(id, password, teacher_id, day);
+    async getGrades(@Body('id') id: number, @Body('password') password: string, @Body('teacher_id') teacher_id: number){
+        return this.registerAttendanceService.getGradeOdoo(id, password, teacher_id);
     }
 
 

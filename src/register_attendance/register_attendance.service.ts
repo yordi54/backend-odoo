@@ -40,7 +40,7 @@ export class RegisterAttendanceService {
 
     }
 
-    async getGradeOdoo(id: number, password: string, grade_id: number, day: string) {
+    async getGradeOdoo(id: number, password: string, grade_id: number) {
         try {
             const response = await this.getSchedules(id, password, grade_id);
             //si grade_id no se repita 

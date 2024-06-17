@@ -20,7 +20,7 @@ export class AuthService {
             "params": {
                 "service": "common",
                 "method": "login",
-                "args": ["colegio_mariscal", email, password]
+                "args": ["prueba", email, password]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -32,13 +32,65 @@ export class AuthService {
     async login(email: string, password: string){ 
         try{
             const response = await this.loginOdoo(email, password);
-            console.log(response);
-            return response;
+            const verifyEmployee = await this.verifyEmployeeOdoo(response.result, password);
+            if (verifyEmployee['result'].length > 0){
+                const typeTeacher = verifyEmployee.result[0]['job_id'];
+                if( typeTeacher != false &&  typeTeacher[1] === "Profesor" ){
+                    console.log(typeTeacher);
+                    return verifyEmployee;
+                }
+            }
+            const verifyParent = await this.verifyParentOdoo(response.result, password);
+            if (verifyParent['result'].length > 0){
+                return verifyParent;
+            }
+            
+            return {
+                "result": "Credenciales invalidas"
+            }
+       
+            
 
+           
         }catch(error){
             throw new BadRequestException(error);
         }
     }
+
+
+    async verifyEmployeeOdoo(id: number, password: string){
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "hr.employee", "search_read", [['user_id', '=', id ]],["name", "schedule_ids", "department_id", "job_id", "work_email", "user_id"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+
+    }
+
+    async verifyParentOdoo(id: number, password: string){
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "guardian", "search_read", [['user_id', '=', id ]],["name", "lastname", "student_ids", "user_id"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+    }
+
+
+
+
+    //////////
 
     
 

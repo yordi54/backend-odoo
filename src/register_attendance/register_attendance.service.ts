@@ -82,6 +82,31 @@ export class RegisterAttendanceService {
         }
     }
 
+    async getAttendanceByOdoo(id: number, password: string, register_attendance_id: number) {
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+    
+    }
+
+    async getAttendance(id: number, password: string, register_attendance_id: number) {
+        try {
+            const response = await this.getAttendanceByOdoo(id, password, register_attendance_id);
+            console.log(response);
+            return response;
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+    }
+
 
 
     

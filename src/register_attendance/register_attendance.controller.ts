@@ -15,6 +15,11 @@ export class RegisterAttendanceController {
         return this.registerAttendanceService.getRegisterAttendance(id, password, grade_id);
     }
 
+    @Post('get-attendance')
+    async getAttendanceByRegister(@Body('id') id: number, @Body('password') password: string, @Body('register_attendance_id') register_attendance_id: number){
+        return this.registerAttendanceService.getAttendance(id, password, register_attendance_id);
+    }
+
 
     ////
 

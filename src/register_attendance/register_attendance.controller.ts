@@ -10,6 +10,13 @@ export class RegisterAttendanceController {
         return this.registerAttendanceService.getGradeOdoo(id, password, teacher_id);
     }
 
+    @Post('get-register-attendance')
+    async getRegisterAttendance(@Body('id') id: number, @Body('password') password: string, @Body('grade_id') grade_id: number){
+        return this.registerAttendanceService.getRegisterAttendance(id, password, grade_id);
+    }
+
+
+    ////
 
 
 

@@ -93,7 +93,7 @@ export class AuthService {
     //////////
 
     
-
+/* 
     async getUserOdoo(id: number, password: string){
         const data = {
             "jsonrpc": "2.0",
@@ -146,7 +146,7 @@ export class AuthService {
         }catch(error){
             throw new BadRequestException(error);
         }
-    }
+    } */
         
 
 

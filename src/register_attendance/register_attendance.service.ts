@@ -55,6 +55,38 @@ export class RegisterAttendanceService {
     }
 
 
+    // asistencia por grade
+    async getRegisterAttendanceByGradeOdoo(id: number, password: string, grade_id: number) {
+        const current_date = new Date();
+        const formattedDate = current_date.toISOString().slice(0, 10);  // Obtén la fecha en formato 'YYYY-MM-DD'
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "register.attendance", "search_read", [["grade_id", "=", grade_id], ["date", "=", formattedDate], ], []]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+    }
+
+    async getRegisterAttendance(id: number, password: string, grade_id: number) {
+        try {
+            const response = await this.getRegisterAttendanceByGradeOdoo(id, password, grade_id);
+            console.log(response);
+            return response;
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+    }
+
+
+
+    
+
+
 
 
 

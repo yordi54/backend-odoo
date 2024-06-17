@@ -11,6 +11,61 @@ export class RegisterAttendanceService {
     constructor(private readonly httpService: HttpService) { }
     private baseUrl = 'https://colegio-mariscal.eastus.cloudapp.azure.com/jsonrpc/';
 
+
+
+
+
+
+
+
+    //REGISTRO DE ASISTENCIA
+    async getSchedules(id: number, password: string, teacher_id) {
+        //obtener el dia actual si ews lunes , martes, miercoles, jueves, viernes
+        const current_date = new Date();
+        const day = current_date.getDay();
+        let dias = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+        const dia = dias[day];
+
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "schedule", "search_read", [["teacher_id", "=", teacher_id],["day" , "=", dia]], ["grade_id"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+
+    }
+
+    async getGradeOdoo(id: number, password: string, grade_id: number, day: string) {
+        try {
+            const response = await this.getSchedules(id, password, grade_id);
+            //si grade_id no se repita 
+            response['result'] = response['result'].filter((v, i, a) => a.findIndex(t => (t.grade_id[0] === v.grade_id[0])) === i);
+            console.log(response);
+            return response;
+
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+
+    }
+
+
+
+
+
+
+    ///FINALIZAR REGISTRO DE ASISTENCIA
+
+
+
+
+
+
     async createRegisterAttendance(id: number, password: String, grade_id: number) {
         const current_date = new Date();
         const formattedDate = current_date.toISOString().slice(0, 10);  // Obtén la fecha en formato 'YYYY-MM-DD'

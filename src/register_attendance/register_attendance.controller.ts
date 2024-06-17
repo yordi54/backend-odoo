@@ -5,6 +5,13 @@ import { RegisterAttendanceService } from './register_attendance.service';
 export class RegisterAttendanceController {
   constructor(private readonly registerAttendanceService: RegisterAttendanceService) {}
 
+  @Post('get-grades')
+    async getGrades(@Body('id') id: number, @Body('password') password: string, @Body('teacher_id') teacher_id: number, @Body('day') day: string){
+        return this.registerAttendanceService.getGradeOdoo(id, password, teacher_id, day);
+    }
+
+
+
 
   @Post('create-attendance')
   async createAttendance(@Body('id') id: number, @Body('password') password: string, @Body('grade_id') grade_id: number){

@@ -65,7 +65,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "register.attendance", "search_read", [["grade_id", "=", grade_id], ["date", "=", formattedDate], ], []]
+                "args": ["prueba", id, password, "register.attendance", "search_read", [["grade_id", "=", grade_id], ["date", "=", formattedDate], ], ["name", "date", "grade_id", "attendance_ids"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -75,8 +75,44 @@ export class RegisterAttendanceService {
     async getRegisterAttendance(id: number, password: string, grade_id: number) {
         try {
             const response = await this.getRegisterAttendanceByGradeOdoo(id, password, grade_id);
-            console.log(response);
-            return response;
+            if (response['result'].length > 0) {
+                const register_attendance_id = response['result'][0]['id'];
+                const attendances =  await this.getAttendanceByOdoo(id, password, register_attendance_id );
+                console.log(attendances);
+                if (attendances['result'].length > 0) {
+                    const student_ids = attendances['result'].map((attendance) => attendance['student_id'][0]);
+                    const students = await this.getStudentOdoo(id, password, student_ids);
+                    attendances['result'].forEach((attendance) => {
+                        const student = students['result'].find((student) => student['id'] === attendance['student_id'][0]);
+                        attendance['student_id'][2] = student['photo'];
+                    });
+                    return  {
+                        "jsonrpc": "2.0",
+                        "result": {
+                            "register_attendance": response['result'],
+                            "attendances": attendances['result']
+                        }
+                    }
+                    
+                } else {
+                    return {
+                        "jsonrpc": "2.0",
+                        "result": {
+                            "register_attendance": response['result'],
+                            "attendances": []
+                        }
+                    }
+                    
+                }
+            }else {
+                return {
+                    "jsonrpc": "2.0",
+                    "result": {
+                        "register_attendance": [],
+                        "attendances": []
+                    }
+                }
+            }
         } catch (error) {
             throw new BadRequestException(error);
         }
@@ -92,20 +128,41 @@ export class RegisterAttendanceService {
                 "args": ["prueba", id, password, "attendance", "search_read", [["register_attendance_id", "=", register_attendance_id]], ["attended", "leave", "missing", "student_id"]]
             }
         };
-        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));      
         return response.data;
     
+    }
+
+    async getStudentOdoo(id: number, password: string, student_id: Number[]) {
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_id]], ["photo", "full_name"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
     }
 
     async getAttendance(id: number, password: string, register_attendance_id: number) {
         try {
             const response = await this.getAttendanceByOdoo(id, password, register_attendance_id);
+            const student_ids = response['result'].map((attendance) => attendance['student_id'][0]);
+            const students = await this.getStudentOdoo(id, password, student_ids);
+            //añadir campo foto a attendances
+            response['result'].forEach((attendance) => {
+                const student = students['result'].find((student) => student['id'] === attendance['student_id'][0]);
+                attendance['student_id'][2] = student['photo'];
+            });
             console.log(response);
             return response;
         } catch (error) {
             throw new BadRequestException(error);
         }
-    }
+    } 
 
 
 

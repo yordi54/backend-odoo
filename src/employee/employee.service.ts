@@ -14,7 +14,7 @@ export class EmployeeService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["colegio_mariscal", id, password, "hr.employee", "search_read", [["user_id", "=", id]], ["name", "schedule_ids", "department_id", "job_id", "work_email", "user_id"]]
+                "args": ["prueba", id, password, "hr.employee", "search_read", [["user_id", "=", id]], ["name", "schedule_ids", "department_id", "job_id", "work_email", "user_id"]]
             }
         };
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
@@ -29,7 +29,7 @@ export class EmployeeService {
                 "params": {
                     "service": "object",
                     "method": "execute",
-                    "args": ["colegio_mariscal", id, password, "schedule", "search_read", [["teacher_id", "=", employeeId]], ["start_time", "end_time", "day", "subject_id", "classroom_id", "grade_id"]]
+                    "args": ["prueba", id, password, "schedule", "search_read", [["teacher_id", "=", employeeId]], ["start_time", "end_time", "day", "subject_id", "classroom_id", "grade_id"]]
                 }
             };
             const scheduleResponse = await firstValueFrom(this.httpService.post(this.baseUrl, scheduleData, { headers: { 'Content-Type': 'application/json' } }));

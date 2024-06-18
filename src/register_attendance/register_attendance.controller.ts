@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, ParseIntPipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { RegisterAttendanceService } from './register_attendance.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('register-attendance')
 export class RegisterAttendanceController {
@@ -20,6 +21,11 @@ export class RegisterAttendanceController {
         return this.registerAttendanceService.getAttendance(id, password, register_attendance_id);
     }
 
+    @Post('image-upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async imagenUpload(@Body('id',ParseIntPipe) id: number, @Body('password') password: string, @Body('register_attendance_id',ParseIntPipe) register_attendance_id, @UploadedFile() file: Express.Multer.File){
+        return this.registerAttendanceService.uploadImageIA(id, password, register_attendance_id, file);
+    }
 
     ////
 

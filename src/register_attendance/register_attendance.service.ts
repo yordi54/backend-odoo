@@ -75,6 +75,7 @@ export class RegisterAttendanceService {
     async getRegisterAttendance(id: number, password: string, grade_id: number) {
         try {
             const response = await this.getRegisterAttendanceByGradeOdoo(id, password, grade_id);
+            console.log(response);
             if (response['result'].length > 0) {
                 const register_attendance_id = response['result'][0]['id'];
                 const attendances =  await this.getAttendanceByOdoo(id, password, register_attendance_id );
@@ -86,6 +87,7 @@ export class RegisterAttendanceService {
                         const student = students['result'].find((student) => student['id'] === attendance['student_id'][0]);
                         attendance['student_id'][2] = student['photo'];
                     });
+                    console.log(attendances);
                     return  {
                         "jsonrpc": "2.0",
                         "result": {
@@ -164,9 +166,68 @@ export class RegisterAttendanceService {
         }
     } 
 
+    async getAllAttendance(id: number, password: string, regiter: number) {
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "attendance", "search_read", [["register_attendance_id", "=", regiter]], ["attended", "leave", "missing", "student_id"]]
+            }
+        };
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data, { headers: { 'Content-Type': 'application/json' } }));
+        return response.data;
+
+    }
 
 
-    
+
+    async uploadImageIA(id: number, password: string, register_attendance_id: number,  file: Express.Multer.File) {
+       try{
+        const response = await this.getAllAttendance(id, password, register_attendance_id);
+        const student_ids = response['result'].map((attendance) => attendance['student_id'][0]);
+        const students = await this.getStudentOdoo(id, password, student_ids);
+        const studentsData = students['result'];
+        await Promise.all(studentsData.map(async (student) => {
+            await this.cargarPerson(student['id'], student['photo']);
+        }));
+        // Validar asistencias
+        // Validar asistencias
+        const responseFace = await this.recognizeFace2(file);
+        console.log(responseFace);
+
+        await Promise.all(responseFace.map(async (face) => {
+            studentsData.forEach(async (student) => {
+                console.log(face['name']);
+                console.log(student['id']);
+                if (face['name'] === student['id'].toString()) {
+                    const attendance = response['result'].find((attendance) => attendance['student_id'][0] === student['id']);
+                    
+                   const data =  await this.updateAttendanceOdoo(id, password, attendance['id'], true, false, false);
+                   console.log(data);
+
+                }else {
+                    const attendance = response['result'].find((attendance) => attendance['student_id'][0] === student['id']);
+                    await this.updateAttendanceOdoo(id, password, attendance['id'], false, false, true);
+                }
+            });
+        }));
+
+        // Eliminar personas e imágenes
+        await this.deletePersons();
+        this.deleteImages();
+            
+            return {
+                "jsonrpc": "2.0",
+                "id": null,
+                "result": true
+            };
+       }catch(error){
+              throw new BadRequestException(error);
+       }
+
+    }
 
 
 
@@ -316,7 +377,7 @@ export class RegisterAttendanceService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["colegio_mariscal", id, password, "attendance", "write", [attendance_id], {
+                "args": ["prueba", id, password, "attendance", "write", [attendance_id], {
                     "attended": attended,
                     "leave": leave,
                     "missing": missing
@@ -392,9 +453,12 @@ export class RegisterAttendanceService {
 
         await Promise.all(responseFace.map(async (face) => {
             studentsData.forEach(async (student) => {
+                
                 if (face['name'] === student['id'].toString()) {
+                    console.log("asistio");
                     const attendance = attendanceData['result'].find((attendance) => attendance['student_id'][0] === student['id']);
-                    await this.updateAttendanceOdoo(id, password, attendance['id'], true, false, false);
+                    const data = await this.updateAttendanceOdoo(id, password, attendance['id'], true, false, false);
+                    console.log(data);
                 }else {
                     const attendance = attendanceData['result'].find((attendance) => attendance['student_id'][0] === student['id']);
                     await this.updateAttendanceOdoo(id, password, attendance['id'], false, false, true);
@@ -444,7 +508,7 @@ export class RegisterAttendanceService {
     async cargarPerson(id: number, photo: string) {
         // Convert base64 to file
         const buffer = Buffer.from(photo, 'base64');
-        const filePath = path.join(__dirname, `${id}.jpg`);
+        const filePath = path.join(__dirname, `${id}.png`);
         fs.writeFileSync(filePath, buffer);
         console.log(`Image saved at: ${filePath}`);
 
@@ -482,6 +546,21 @@ export class RegisterAttendanceService {
             }
         }));
         return response.data; 
+    } 
+
+    async recognizeFace2(photo: Express.Multer.File) {
+        const formData = new FormData();
+        formData.append('photo', photo.buffer, {
+            filename: photo.originalname,
+            contentType: photo.mimetype
+        });
+        const response = await firstValueFrom(this.httpService.post('https://api.luxand.cloud/photo/search/v2', formData, {
+            headers: {
+                ...formData.getHeaders(),
+                'token': '7023ac2757454737a7a99da323127512'
+            }
+        }));
+        return response.data;
     }
 
     //delete base de datos

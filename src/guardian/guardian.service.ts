@@ -123,14 +123,14 @@ export class GuardianService {
 
     ////////////
 
-    async getStudentOdoo(id: number, password: String, student_ids: number[]) {
+    async getStudentOdoo(id: number, password: String, guardian_id: number) {
         const data = {
             "jsonrpc": "2.0",
             "method": "call",
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_ids]], ["name", "lastname"]]
+                "args": ["prueba", id, password, "student", "search_read", [["guardian_ids", "in", guardian_id]], ["name", "lastname"]]
             }
         }
         //comunicados
@@ -139,9 +139,9 @@ export class GuardianService {
 
     }
 
-    async getStudent(id: number, password: String, student_ids: number[]) {
+    async getStudent(id: number, password: String, guardina_id: number) {
         try {
-            const response = await this.getStudentOdoo(id, password, student_ids);
+            const response = await this.getStudentOdoo(id, password, guardina_id);
             console.log(response);
             return response;
 

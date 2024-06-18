@@ -10,7 +10,7 @@ export class GuardianController {
     return this.guardianService.getAnnouncementByGuardians(6, 'jorge1234', []);
   }
   @Post('get-student')
-  async getStudent(@Body('id') id: number, @Body('password') password: string, @Body('student_ids') student_ids: number[]){
-    return this.guardianService.getStudent(id, password, student_ids);
+  async getStudent(@Body('id') id: number, @Body('password') password: string, @Body('guardian_id') guardian_id: number){
+    return this.guardianService.getStudent(id, password, guardian_id);
   }
 }

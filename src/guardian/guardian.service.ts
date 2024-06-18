@@ -236,7 +236,7 @@ export class GuardianService {
             "params": {
                 "service": "object",
                 "method": "execute",
-                "args": ["prueba", id, password, "announcement", "search_read", [], ["reason", "descripcion"]]
+                "args": ["prueba", id, password, "announcement", "search_read", [], ["reason", "description"]]
             }
         }
         const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));

@@ -152,6 +152,37 @@ export class GuardianService {
 
     }
 
+    async getPeriodOdoo(id: number, password: String) {
+
+        
+
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "period", "search_read", [], ["name", "management_id"]]
+            }
+        }
+        //comunicados
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));
+        return response.data;
+    }
+
+    async getPeriod(id: number, password: String) {
+        try {
+            const response = await this.getPeriodOdoo(id, password);
+            console.log(response);
+            //quitar los que no son de este año
+            return response;
+        }catch (error) {
+            throw new BadRequestException(error);
+        }
+    }
+
+
+
 
 
 }

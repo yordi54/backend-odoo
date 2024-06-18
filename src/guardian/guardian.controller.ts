@@ -13,4 +13,8 @@ export class GuardianController {
   async getStudent(@Body('id') id: number, @Body('password') password: string, @Body('guardian_id') guardian_id: number){
     return this.guardianService.getStudent(id, password, guardian_id);
   }
+  @Post('get-period')
+  async getPeriod(@Body('id') id: number, @Body('password') password: string){
+    return this.guardianService.getPeriod(id, password);
+  }
 }

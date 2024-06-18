@@ -229,6 +229,34 @@ export class GuardianService {
     }
 
 
+    async getAnnouncementByOdoo(id: number, password: string) {
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "announcement", "search_read", [], ["reason", "descripcion"]]
+            }
+        }
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));
+        return response.data;
+
+    }
+
+    async getAnnouncements(id: number, password: string) {
+        try {
+            const response = await this.getAnnouncementByOdoo(id, password);
+            console.log(response);
+            return response;
+
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+
+    }
+
+
 
 
 

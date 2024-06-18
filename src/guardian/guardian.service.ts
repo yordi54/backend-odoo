@@ -181,6 +181,53 @@ export class GuardianService {
         }
     }
 
+    //get boletin
+    async getBoletinOdoo(id: number, password: String, student_id: number, period_id: number) {
+            
+            const data = {
+                "jsonrpc": "2.0",
+                "method": "call",
+                "params": {
+                    "service": "object",
+                    "method": "execute",
+                    "args": ["prueba", id, password, "report.card", "search_read", [["student_id", "=", student_id], ["period_id", "=", period_id]], ["mark_ids"]]
+                }
+            }
+            const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));
+            return response.data;
+    }
+
+    async getMarksByOdoo(id: number, password: String, marks_id: number[] ) {
+                
+                const data = {
+                    "jsonrpc": "2.0",
+                    "method": "call",
+                    "params": {
+                        "service": "object",
+                        "method": "execute",
+                        "args": ["prueba", id, password, "mark", "search_read", [["id", "in", marks_id]], ["number", "subject_id"]]
+                    }
+                }
+                const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));
+                return response.data;
+
+    }
+
+    async getReportMark(id: number, password: String, student_id: number, period_id: number) {
+        try {
+            const response = await this.getBoletinOdoo(id, password, student_id, period_id);
+            const marks_id = [];
+            response['result'][0]['mark_ids'].forEach(async (element) => {
+                marks_id.push(element);
+            });
+            const marks = await this.getMarksByOdoo(id, password, marks_id);
+            console.log(marks);
+            return marks;
+        }catch (error) {
+            throw new BadRequestException(error);
+        }
+    }
+
 
 
 

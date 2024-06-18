@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -119,5 +119,39 @@ export class GuardianService {
         }
 
     }
+
+
+    ////////////
+
+    async getStudentOdoo(id: number, password: String, student_ids: number[]) {
+        const data = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                "service": "object",
+                "method": "execute",
+                "args": ["prueba", id, password, "student", "search_read", [["id", "in", student_ids]], ["name", "lastname"]]
+            }
+        }
+        //comunicados
+        const response = await firstValueFrom(this.httpService.post(this.baseUrl, data));
+        return response.data;
+
+    }
+
+    async getStudent(id: number, password: String, student_ids: number[]) {
+        try {
+            const response = await this.getStudentOdoo(id, password, student_ids);
+            console.log(response);
+            return response;
+
+        }
+        catch (error) {
+            throw new BadRequestException(error);
+        }
+
+    }
+
+
 
 }
